@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+venv/
+.venv/
+
+# Build
+dist/
+build/
+out/
+
+# System
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Secrets
+.env
+*.key
+*.pem
+
+# Tests
+coverage/
+*.test-results

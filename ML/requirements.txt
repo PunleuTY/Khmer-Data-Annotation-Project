@@ -1,0 +1,12 @@
+pillow 
+numpy 
+ultralytics
+opencv-python
+pytesseract
+fastapi
+uvicorn
+python-multipart
+httpx
+tesseract
+google-generativeai
+python-dotenv

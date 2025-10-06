@@ -1,0 +1,15 @@
+/* Import Tailwind first */
+@import "tailwindcss";
+
+/* Define theme variables */
+@theme {
+  --font-cadt: 'CADTMonoDisplay-Regular', sans-serif;
+}
+
+/* Load custom font */
+@font-face {
+  font-family: 'CADTMonoDisplay-Regular';
+  src: url('./assets/fonts/CADTMonoDisplay-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
