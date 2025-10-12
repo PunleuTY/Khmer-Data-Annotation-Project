@@ -4,8 +4,9 @@ import pytesseract
 import os
 
 # ---- Configure Tesseract ----
-pytesseract.pytesseract.tesseract_cmd = r"/opt/homebrew/bin/tesseract"
-os.environ["TESSDATA_PREFIX"] = r"/opt/homebrew/bin/tesseract/tessdata"
+# Windows path (default installation location)
+pytesseract.pytesseract.tesseract_cmd = r"D:\Pytesseract\tesseract.exe"
+os.environ["TESSDATA_PREFIX"] = r"D:\Pytesseract\tessdata"
 
 # ---- PreProcessing for OCR ----
 '''This first function for cleaning image before sending to OCR engine
@@ -25,20 +26,56 @@ def preprocess_for_ocr(pil_image):
     - This helps to improve accuracy, reduce noise from irrelevant areas, and handle complex layouts like tables signs,..
 '''
 def process_user_boxes(image_bytes, boxes):
+    print(f"\n[OCR DEBUG] Starting text extraction...")
+    print(f"[OCR DEBUG] Number of boxes to process: {len(boxes)}")
+    
     pil_image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+    print(f"[OCR DEBUG] Image loaded - Size: {pil_image.size}, Mode: {pil_image.mode}")
+    
     detections = []
 
-    for box in boxes:
+    for idx, box in enumerate(boxes):
+        print(f"\n[OCR DEBUG] Processing box {idx + 1}/{len(boxes)}: {box}")
         if not (isinstance(box, list) and len(box) == 4):
+            print(f"[OCR DEBUG] ✗ Box {idx + 1} skipped - Invalid format (not a list of 4 values)")
             continue
-        x1, y1, x2, y2 = map(int, box)
+        
+        # Ensure coordinates are valid integers
+        try:
+            x1, y1, x2, y2 = map(int, box)
+            print(f"[OCR DEBUG] Box coordinates: x1={x1}, y1={y1}, x2={x2}, y2={y2}")
+            
+            # Validate coordinates are within image bounds
+            img_width, img_height = pil_image.size
+            x1 = max(0, min(x1, img_width))
+            y1 = max(0, min(y1, img_height))
+            x2 = max(0, min(x2, img_width))
+            y2 = max(0, min(y2, img_height))
+            
+            # Ensure box has valid dimensions
+            if x2 <= x1 or y2 <= y1:
+                print(f"[OCR DEBUG] ✗ Box {idx + 1} skipped - Invalid dimensions (width or height <= 0)")
+                continue
+                
+        except (ValueError, TypeError) as e:
+            print(f"[OCR DEBUG] ✗ Box {idx + 1} skipped - Coordinate conversion error: {e}")
+            continue
+        
         cropped = pil_image.crop((x1, y1, x2, y2))
+        cropped_size = cropped.size
+        print(f"[OCR DEBUG] Cropped region size: {cropped_size}")
+        
         preprocessed = preprocess_for_ocr(cropped)
+        print(f"[OCR DEBUG] Image preprocessed successfully")
+        
         try:
             # Text Recognition and Extraction Stages using Tesseract OCR with Khmer language
             # Using regex to clean up whitespace characters after passing the cleaned cropping image into Tesseract
-            text = re.sub(r"\s+", " ", pytesseract.image_to_string(preprocessed, lang="khm+eng")).strip()
-        except Exception:
+            raw_text = pytesseract.image_to_string(preprocessed, lang="khm")
+            text = re.sub(r"\s+", " ", raw_text).strip()
+            print(f"[OCR DEBUG] ✓ Text extracted: '{text}' (length: {len(text)})")
+        except Exception as e:
+            print(f"[OCR DEBUG] ✗ OCR Error for box {idx + 1}: {str(e)}")
             text = ""
 
         buffer = io.BytesIO()
@@ -56,5 +93,11 @@ def process_user_boxes(image_bytes, boxes):
             "extracted_text": text,
             "cropped_image_base64": img_base64
         })
+    
+    print(f"\n[OCR DEBUG] ===== EXTRACTION COMPLETE =====")
+    print(f"[OCR DEBUG] Total boxes processed: {len(detections)}/{len(boxes)}")
+    print(f"[OCR DEBUG] Boxes with text: {sum(1 for d in detections if d['extracted_text'])}")
+    print(f"[OCR DEBUG] Empty results: {sum(1 for d in detections if not d['extracted_text'])}")
+    
     return detections
 

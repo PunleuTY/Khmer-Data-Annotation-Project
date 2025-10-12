@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+
 	//"io"
 	"mime/multipart"
 	"net/http"
@@ -243,16 +244,19 @@ func UploadImages(imageCollection *mongo.Collection) gin.HandlerFunc {
 					return
 				}
 
-				data, err := os.ReadFile(tempPath)
-				if err != nil {
-					doneChan <- Result{FileName: file.Filename, Annotations: json.RawMessage("[]")}
-					return
-				}
+			data, err := os.ReadFile(tempPath)
+			if err != nil {
+				doneChan <- Result{FileName: file.Filename, Annotations: json.RawMessage("[]")}
+				return
+			}
 
-				imgConfig, _, _ := image.DecodeConfig(bytes.NewReader(data))
-				base64Str := "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(data)
-
-				// **Check if image already exists**
+			imgConfig, _, err := image.DecodeConfig(bytes.NewReader(data))
+			if err != nil {
+				// Set default values if decode fails
+				imgConfig.Width = 0
+				imgConfig.Height = 0
+			}
+			base64Str := "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(data)				// **Check if image already exists**
 				filter := bson.M{"project_id": projectID, "name": file.Filename}
 				update := bson.M{
 					"$set": bson.M{

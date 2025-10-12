@@ -32,24 +32,24 @@ export function AnnotationList({
   const [progress, setProgress] = React.useState(null);
   const cancelRef = React.useRef({ cancel: false });
 
-  //   const runOcr = async (annId) => {
-  //     if (!image) return
-  //     try {
-  //       const ann = annotations.find((a) => a.id === annId)
-  //       const blob = await cropRegion(image.url, ann)
-  //       const { data } = await Tesseract.recognize(blob, lang, {
-  //         logger: (m) => {
-  //           if (m.status && m.progress != null) {
-  //             setProgress({ status: m.status, pct: Math.round(m.progress * 100) })
-  //           }
-  //         },
-  //       })
-  //       const text = (data?.text || "").trim()
-  //       onUpdate(annId, { text })
-  //     } catch (e) {
-  //       console.error(e)
-  //     }
+  // const runOcr = async (annId) => {
+  //   if (!image) return
+  //   try {
+  //     const ann = annotations.find((a) => a.id === annId)
+  //     const blob = await cropRegion(image.url, ann)
+  //     const { data } = await Tesseract.recognize(blob, lang, {
+  //       logger: (m) => {
+  //         if (m.status && m.progress != null) {
+  //           setProgress({ status: m.status, pct: Math.round(m.progress * 100) })
+  //         }
+  //       },
+  //     })
+  //     const text = (data?.text || "").trim()
+  //     onUpdate(annId, { text })
+  //   } catch (e) {
+  //     console.error(e)
   //   }
+  // }
 
 
   // const runOcrAll = async () => {
@@ -170,6 +170,7 @@ export function AnnotationList({
                   onChange={(e) => onUpdate(a.id, { text: e.target.value })}
                   rows={3}
                 />
+
               </div>
             </div>
 
