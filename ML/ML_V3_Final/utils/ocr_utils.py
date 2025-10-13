@@ -2,10 +2,20 @@ import io, base64, re, numpy as np, cv2
 from PIL import Image
 import pytesseract
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 
-# ---- Configure Tesseract ----
-pytesseract.pytesseract.tesseract_cmd = r"/opt/homebrew/bin/tesseract"
-os.environ["TESSDATA_PREFIX"] = r"/opt/homebrew/bin/tesseract/tessdata"
+# Assuming this file is in root/ML/ml_v3_final/utils/
+SCRIPT_DIR = Path(__file__).resolve().parent
+ML_DIR = SCRIPT_DIR.parent.parent
+dotenv_path = ML_DIR / ".env"
+load_dotenv(dotenv_path=dotenv_path)
+
+# # ---- Configure Tesseract ----
+TESSERACT_CMD = os.getenv("TESSERACT_CMD")
+TESSERACT_TESSDATA_PREFIX = os.getenv("TESSERACT_TESSDATA_PREFIX")
+pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
+os.environ["TESSDATA_PREFIX"] = TESSERACT_TESSDATA_PREFIX
 
 # ---- PreProcessing for OCR ----
 '''This first function for cleaning image before sending to OCR engine

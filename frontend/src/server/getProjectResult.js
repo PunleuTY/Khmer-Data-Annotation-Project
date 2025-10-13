@@ -1,4 +1,4 @@
-const BACKEND_PROJECT_URL = "http://127.0.0.1:3000/projects";
+const BACKEND_PROJECT_URL = `${import.meta.env.VITE_BACKEND_BASE_ENDPOINT}/projects`;
 
 export const editProjectAPI = async (projectId, updatedData) => {
   try {
@@ -21,6 +21,7 @@ export const editProjectAPI = async (projectId, updatedData) => {
       console.error("Error response:", errorText);
       throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
     }
+
     const data = await response.json();
     console.log("Edit API response data:", data);
     return data;
