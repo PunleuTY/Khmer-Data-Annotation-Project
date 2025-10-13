@@ -31,6 +31,25 @@ func main() {
 	CORS_ORIGIN := os.Getenv("CORS_ORIGIN")
 	PORT := os.Getenv("PORT")
 
+	// Validate required environment variables
+	if MONGODB_URI == "" {
+		log.Fatal("Missing required environment variable: MONGODB_URI")
+	}
+	if MONGODB_DB == "" {
+		log.Fatal("Missing required environment variable: MONGODB_DB")
+	}
+	if IMAGE_COLLECTION == "" {
+		log.Fatal("Missing required environment variable: IMAGE_COLLECTION")
+	}
+	if PROJECT_COLLECTION == "" {
+		log.Fatal("Missing required environment variable: PROJECT_COLLECTION")
+	}
+	if CORS_ORIGIN == "" {
+		log.Fatal("Missing required environment variable: CORS_ORIGIN")
+	}
+	if PORT == "" {
+		log.Fatal("Missing required environment variable: PORT")
+	}
 	// Initialize MongoDB client
 	client, err := mongo.NewClient(options.Client().ApplyURI(MONGODB_URI))
 	if err != nil {
