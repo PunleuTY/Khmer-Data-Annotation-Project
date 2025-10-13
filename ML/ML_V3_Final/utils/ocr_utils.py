@@ -14,6 +14,12 @@ load_dotenv(dotenv_path=dotenv_path)
 # # ---- Configure Tesseract ----
 TESSERACT_CMD = os.getenv("TESSERACT_CMD")
 TESSERACT_TESSDATA_PREFIX = os.getenv("TESSERACT_TESSDATA_PREFIX")
+if not TESSERACT_CMD or not TESSERACT_TESSDATA_PREFIX:
+    raise RuntimeError(
+        "Missing required Tesseract environment variables: "
+        f"TESSERACT_CMD={TESSERACT_CMD!r}, TESSERACT_TESSDATA_PREFIX={TESSERACT_TESSDATA_PREFIX!r}. "
+        "Please set these in your environment or .env file."
+    )
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
 os.environ["TESSDATA_PREFIX"] = TESSERACT_TESSDATA_PREFIX
 
