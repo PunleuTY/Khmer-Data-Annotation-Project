@@ -1,21 +1,21 @@
 import { file } from "jszip";
-const BACKEND_UPLOAD_URL = "http://127.0.0.1:8000/images/";
 
+const BACKEND_UPLOAD_URL = `${import.meta.env.VITE_ML_BASE_ENDPOINT}/images/`;
+const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_ENDPOINT;
+
+// Upload images to ML backend
 export const uploadImages = async (projectId, files, annotations) => {
   if (!files || files.length === 0) return null;
 
   const formData = new FormData();
   formData.append("project_id", projectId);
+  formData.append("image", files[0]);
+  formData.append("annotations", JSON.stringify(annotations));
 
   console.log("upload to project", files, projectId);
-
-  formData.append("image", files[0]);
-
-  // ✅ Add annotation points (convert array/object → JSON string)
-  formData.append("annotations", JSON.stringify(annotations));
   console.log("data annotation go to", annotations);
 
-  const res = await fetch("http://127.0.0.1:8000/images/", {
+  const res = await fetch(BACKEND_UPLOAD_URL, {
     method: "POST",
     body: formData,
   });
@@ -27,6 +27,7 @@ export const uploadImages = async (projectId, files, annotations) => {
   return await res.json();
 };
 
+// Save ground truth annotations to backend
 export const saveGroundTruth = async (
   filename,
   projectId,
@@ -34,11 +35,12 @@ export const saveGroundTruth = async (
   annotations
 ) => {
   if (!annotations) return null;
+
   const payload = {
     filename,
     project_id: projectId,
     image_id: imageId,
-    annotations: annotations,
+    annotations,
     meta: {
       tool: "Khmer Data Annotation Tool",
       lang: "khm",
@@ -47,16 +49,18 @@ export const saveGroundTruth = async (
   };
 
   console.log("save ground truth payload", payload);
+
   try {
-    const res = await fetch("http://127.0.0.1:3000/images/save-groundtruth", {
+    const res = await fetch(`${BACKEND_BASE_URL}/images/save-groundtruth`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+
     const data = await res.json();
     return data;
   } catch (err) {
-    console.error(err);
+    console.error("Error saving ground truth:", err);
     alert("Error saving ground truth");
   }
 };

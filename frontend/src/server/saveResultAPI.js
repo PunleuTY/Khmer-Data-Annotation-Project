@@ -1,8 +1,9 @@
 import { loadProject } from "@/lib/storage";
 
-const API_BASE_URL = "http://localhost:3001/api";
-const BACKEND_PROJECT_URL = "http://127.0.0.1:3000/projects";
+const BACKEND_PROJECT_URL = `${import.meta.env.VITE_BACKEND_BASE_ENDPOINT}/projects`;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_ENDPOINT;
 
+// Load all projects
 export const loadProjectAPI = async () => {
   try {
     const res = await fetch(BACKEND_PROJECT_URL);
@@ -10,13 +11,14 @@ export const loadProjectAPI = async () => {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
     const data = await res.json();
-    return data.projects || data; // Handle both {projects: [...]} and direct array responses
+    return data.projects || data; // handle {projects: [...]} or direct array
   } catch (e) {
     console.error("Failed to load projects:", e.message);
-    throw e; // Re-throw to let calling component handle it
+    throw e;
   }
 };
 
+// Create new project
 export const createProjectAPI = async (name, description) => {
   try {
     const res = await fetch(BACKEND_PROJECT_URL, {
@@ -24,20 +26,22 @@ export const createProjectAPI = async (name, description) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, description }),
     });
+
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message || `HTTP ${res.status}: ${res.statusText}`);
     }
-    return data; // Return the created project
+    return data;
   } catch (e) {
     console.error("createProjectAPI error:", e);
-    throw e; // Re-throw so the calling component can handle the error
+    throw e;
   }
 };
 
+// Get all images for a project
 export const getImageByProjectAPI = async (id) => {
   try {
-    const res = await fetch(`http://127.0.0.1:3000/projects/${id}/images`, {
+    const res = await fetch(`${BACKEND_PROJECT_URL}/${id}/images`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -50,10 +54,11 @@ export const getImageByProjectAPI = async (id) => {
     return data;
   } catch (e) {
     console.error("Failed to fetch project images:", e.message);
-    return null; // Return null or an empty array to indicate an error
+    return null; // fallback
   }
 };
 
+// Save result
 export const saveResultAPI = async (resultData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/results`, {
@@ -71,7 +76,7 @@ export const saveResultAPI = async (resultData) => {
     const data = await response.json();
     return {
       success: true,
-      data: data,
+      data,
     };
   } catch (error) {
     console.error("Error saving result:", error);
