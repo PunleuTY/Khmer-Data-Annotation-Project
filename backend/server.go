@@ -17,6 +17,9 @@ import (
 )
 
 func main() {
+
+	// Initialize MongoDB client (updated to use Connect directly)
+
 	// Load environment variables
 	err := godotenv.Load()
 	if err != nil {
@@ -50,18 +53,20 @@ func main() {
 	if PORT == "" {
 		log.Fatal("Missing required environment variable: PORT")
 	}
+	
 	// Initialize MongoDB client
-	client, err := mongo.NewClient(options.Client().ApplyURI(MONGODB_URI))
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	if err := client.Connect(ctx); err != nil {
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(MONGODB_URI))
+	if err != nil {
 		log.Fatal(err)
 	}
+	defer func() {
+		if err = client.Disconnect(ctx); err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	if err := client.Ping(ctx, nil); err != nil {
 		log.Fatal("MongoDB not connected:", err)
@@ -79,7 +84,7 @@ func main() {
 
 	// ----- Add CORS middleware -----
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{CORS_ORIGIN}, // frontend origin
+		AllowOrigins:     []string{CORS_ORIGIN}, // frontend origin from .env
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 		AllowCredentials: true,

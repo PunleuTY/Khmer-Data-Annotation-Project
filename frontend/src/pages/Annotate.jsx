@@ -1,14 +1,14 @@
 "use client";
 // This file is part of the Open-Source project:
 import axios from "axios";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
+import {  
   ImagePlus,
   Settings,
   ChevronLeft,
@@ -36,7 +36,7 @@ import { ImageUploader } from "@/components/image-uploader";
 import { getImageByProjectAPI } from "@/server/saveResultAPI";
 
 // --- CONSTANTS ---
-const HISTORY_LIMIT = 50;
+const HISTORY_LIMIT = 100;
 
 // --- HELPERS ---
 const convertAnnotations = (data) => {
@@ -60,6 +60,7 @@ const Annotate = () => {
   const [exportOpen, setExportOpen] = useState(false);
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const historyIndexRef = useRef(-1);
   const [fullOcr, setFullOcr] = useState({ text: "", conf: null });
   const [ocrLoading, setOcrLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
@@ -568,7 +569,7 @@ const Annotate = () => {
                 <AnnotationCanvas
                   image={currentImage}
                   mode={mode}
-                  annotations={annotations[currentId] || []}
+                  annotations={annotations[currentId] || []}  
                   onAddAnnotation={addAnnotation}
                   onUpdateAnnotation={updateAnnotation}
                 />
