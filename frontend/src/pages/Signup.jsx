@@ -18,14 +18,14 @@ const SignupPage = () => {
     }));
   };
 
+  // Handle default signup
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle signup logic here
     console.log("Signup form submitted:", formData);
   };
 
+  // Handle google signup
   const handleGoogleSignup = () => {
-    // Handle Google signup logic here
     console.log("Google signup clicked");
   };
 

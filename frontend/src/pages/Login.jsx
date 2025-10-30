@@ -17,14 +17,14 @@ const LoginPage = () => {
     }));
   };
 
+  // Handle default login
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic here
     console.log("Login form submitted:", formData);
   };
 
+  // Handle google login
   const handleGoogleLogin = () => {
-    // Handle Google login logic here
     console.log("Google login clicked");
   };
 

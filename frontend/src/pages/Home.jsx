@@ -150,9 +150,8 @@ export const Home = () => {
           {/* Left Content */}
           <div>
             <p className="text-[#12284c] font-semibold max-w-2xl text-xs lg:text-lg pt-0  md:text-base">
-              Upload images, annotate text regions, extract Khmer text
-              with OCR, and validate against ground truth to build high-quality
-              datasets.
+              Upload images, annotate text regions, extract Khmer text with OCR,
+              and validate against ground truth to build high-quality datasets.
             </p>
 
             <ul className="text-[#12284c] font-bold mt-8 space-y-2 text-xs md:text-base">
