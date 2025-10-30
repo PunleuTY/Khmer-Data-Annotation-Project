@@ -5,8 +5,8 @@ import Annotate from "./pages/Annotate";
 import Feature from "./pages/Feature";
 import About from "./pages/About";
 import Project from "./pages/Myproject";
-import LoginPage from "./pages/Login";
-import SignupPage from "./pages/Signup";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import "./App.css";
 function App() {
   return (
@@ -21,8 +21,8 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="project" element={<Project />} />
         </Route>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="signup" element={<SignupPage />} />
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<Signup />} />
       </Routes>
     </Router>
   );

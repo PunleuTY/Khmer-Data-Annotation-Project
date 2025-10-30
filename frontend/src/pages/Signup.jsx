@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-const SignupPage = () => {
+const Signup = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -140,4 +140,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default Signup;

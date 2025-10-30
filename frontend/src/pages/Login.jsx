@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-const LoginPage = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -123,4 +123,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
