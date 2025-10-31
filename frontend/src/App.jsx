@@ -7,6 +7,7 @@ import About from "./pages/About";
 import Project from "./pages/Myproject";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Profile from "./pages/Userprofile";
 import "./App.css";
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         </Route>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
+        <Route path="profile" element={<Profile />} />
       </Routes>
     </Router>
   );
